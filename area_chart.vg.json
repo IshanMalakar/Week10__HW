@@ -1,0 +1,85 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "description": "Area Chart showing unemployment rate in Victoria with dropdown filter by month.",
+    "width": 700,
+    "height": 400,
+    "data": {
+      "url": "Unemployment_Line_chart.csv",
+      "format": {"type": "csv"}
+    },
+    "transform": [
+      {
+        "filter": "datum.State == 'VIC'"
+      },
+      {
+        "filter": "datum.Month == MonthSelection || MonthSelection == 'All'"
+      }
+    ],
+    "layer": [
+      {
+        "mark": {
+          "type": "area",
+          "line": {"color": "#87CEEB"},
+          "color": {
+            "gradient": "linear",
+            "stops": [
+              {"offset": 0, "color": "#e0f7fa"},
+              {"offset": 1, "color": "#0288d1"}
+            ]
+          }
+        },
+        "encoding": {
+          "x": {
+            "field": "Year",
+            "type": "temporal",
+            "title": "Year",
+            "axis": {"labelAngle": -45}
+          },
+          "y": {
+            "field": "Unemployment (%)",
+            "type": "quantitative",
+            "title": "Unemployment Rate (%)"
+          },
+          "tooltip": [
+            {"field": "Year", "type": "temporal", "title": "Year"},
+            {"field": "Unemployment (%)", "type": "quantitative", "title": "Unemployment Rate (%)"}
+          ]
+        }
+      },
+      {
+        "mark": {"type": "rule", "color": "red", "strokeWidth": 2},
+        "encoding": {
+          "y": {"aggregate": "max", "field": "Unemployment (%)", "type": "quantitative"},
+          "tooltip": [
+            {"aggregate": "max", "field": "Unemployment (%)", "title": "Max Unemployment Rate (%)"}
+          ]
+        }
+      },
+      {
+        "mark": {"type": "rule", "color": "green", "strokeWidth": 2},
+        "encoding": {
+          "y": {"aggregate": "min", "field": "Unemployment (%)", "type": "quantitative"},
+          "tooltip": [
+            {"aggregate": "min", "field": "Unemployment (%)", "title": "Min Unemployment Rate (%)"}
+          ]
+        }
+      }
+    ],
+    "params": [
+      {
+        "name": "MonthSelection",
+        "bind": {
+          "input": "select",
+          "options": [
+            "All", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+          ],
+          "labels": [
+            "All", "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"
+          ],
+          "name": "Select Month: "
+        },
+        "value": "All"
+      }
+    ]
+  }
+  
